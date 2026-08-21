@@ -65,6 +65,18 @@ public class User extends BaseEntity {
         this.avatarUrl = avatarUrl;
     }
 
+    public void updateGithubAuthentication(Long githubId, String githubLoginId, String email, String githubToken) {
+        this.githubId = githubId;
+        this.githubLoginId = githubLoginId;
+        this.email = email;
+        this.githubToken = githubToken;
+    }
+
+    public void updateProfile(String name, String avatarUrl) {
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+    }
+
     public void updateRefreshTokenHash(String refreshTokenHash) {
         this.refreshTokenHash = refreshTokenHash;
     }
