@@ -2,7 +2,7 @@ package SeCause.SeCause_be.domain.user.dto;
 
 import SeCause.SeCause_be.domain.user.entity.User;
 
-public record UserMeResponse(
+public record UserUpdateResponse(
         Long userId,
         String githubLoginId,
         String email,
@@ -10,8 +10,8 @@ public record UserMeResponse(
         String avatarUrl
 ) {
 
-    public static UserMeResponse from(User user) {
-        return new UserMeResponse(
+    public static UserUpdateResponse from(User user) {
+        return new UserUpdateResponse(
                 user.getUserId(),
                 user.getGithubLoginId(),
                 user.getEmail(),

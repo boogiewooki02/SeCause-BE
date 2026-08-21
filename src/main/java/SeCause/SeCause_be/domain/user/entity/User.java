@@ -65,6 +65,11 @@ public class User extends BaseEntity {
         this.avatarUrl = avatarUrl;
     }
 
+    public void updateProfile(String name, String avatarUrl) {
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+    }
+
     public void updateRefreshTokenHash(String refreshTokenHash) {
         this.refreshTokenHash = refreshTokenHash;
     }
