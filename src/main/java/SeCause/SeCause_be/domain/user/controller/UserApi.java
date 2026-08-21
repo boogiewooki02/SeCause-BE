@@ -89,7 +89,11 @@ public interface UserApi {
 
     @Operation(
             summary = "내 정보 수정",
-            description = "로그인한 사용자의 이름과 프로필 이미지 URL을 수정합니다. avatarUrl을 null로 보내면 프로필 이미지를 삭제하고, 필드를 보내지 않으면 기존 값을 유지합니다. GitHub 연동 이메일은 수정 대상이 아닙니다.",
+            description = """
+                    로그인한 사용자의 이름과 프로필 이미지 URL을 수정합니다. \n
+                    name 또는 avatarUrl을 빈 문자열로 보내면 기존 값을 유지합니다. \n
+                    avatarUrl을 null로 보내면 프로필 이미지를 삭제하고, 필드를 보내지 않으면 기존 값을 유지합니다. \n
+                    GitHub 연동 이메일은 수정 대상이 아닙니다.""",
             security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @io.swagger.v3.oas.annotations.responses.ApiResponse(

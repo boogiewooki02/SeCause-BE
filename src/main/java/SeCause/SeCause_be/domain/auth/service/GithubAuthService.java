@@ -56,7 +56,7 @@ public class GithubAuthService {
                 userResponse.login(),
                 user.getName(),
                 user.getEmail(),
-                userResponse.avatarUrl()
+                user.getAvatarUrl()
         );
 
         return new GithubLoginResult(response, accessToken, refreshToken);

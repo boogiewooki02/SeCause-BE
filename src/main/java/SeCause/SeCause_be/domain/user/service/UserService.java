@@ -23,7 +23,7 @@ public class UserService {
         return userRepository.findByGithubId(githubId)
                 .or(() -> findExistingUserByEmail(email))
                 .map(user -> {
-                    user.updateGithubProfile(githubId, githubLoginId, email, name, githubToken, avatarUrl);
+                    user.updateGithubAuthentication(githubId, githubLoginId, email, githubToken);
                     return user;
                 })
                 .orElseGet(() -> userRepository.save(User.createGithubUser(githubId, githubLoginId, email, name, githubToken, avatarUrl)));
