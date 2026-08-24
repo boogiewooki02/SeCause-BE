@@ -32,13 +32,14 @@ public class AnalysisDispatchService {
 
     @Transactional(readOnly = true)
     public FastApiAnalysisRequest createFastApiRequest(Long analysisId) {
-        Analysis analysis = getAnalysisWithRepository(analysisId);
+        Analysis analysis = getAnalysisWithRepositoryAndUser(analysisId);
         ProjectRepository repository = analysis.getRepository();
         return new FastApiAnalysisRequest(
                 analysis.getAnalysisId(),
                 repository.getRepositoryId(),
                 repository.getGithubLink(),
-                repository.getBranch()
+                repository.getBranch(),
+                repository.getUser().getGithubToken()
         );
     }
 
@@ -53,8 +54,8 @@ public class AnalysisDispatchService {
                 .orElseThrow(() -> new AnalysisException(AnalysisErrorCode.ANALYSIS_RESULT_NOT_FOUND));
     }
 
-    private Analysis getAnalysisWithRepository(Long analysisId) {
-        return analysisRepository.findWithRepositoryByAnalysisId(analysisId)
+    private Analysis getAnalysisWithRepositoryAndUser(Long analysisId) {
+        return analysisRepository.findWithRepositoryAndUserByAnalysisId(analysisId)
                 .orElseThrow(() -> new AnalysisException(AnalysisErrorCode.ANALYSIS_RESULT_NOT_FOUND));
     }
 }

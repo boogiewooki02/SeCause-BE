@@ -4,6 +4,7 @@ public record FastApiAnalysisRequest(
         Long analysisId,
         Long repositoryId,
         String repositoryUrl,
-        String branch
+        String branch,
+        String githubToken
 ) {
 }
