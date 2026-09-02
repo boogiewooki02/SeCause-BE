@@ -19,6 +19,7 @@ public enum AnalysisErrorCode implements BaseErrorCode {
     GITHUB_API_REQUEST_FAILED(HttpStatus.BAD_GATEWAY, "ANALYSIS_GITHUB5021", "GitHub API 호출에 실패했습니다."),
     FASTAPI_REQUEST_FAILED(HttpStatus.BAD_GATEWAY, "ANALYSIS_FASTAPI5021", "분석 서버 요청에 실패했습니다."),
     ANALYSIS_CALLBACK_INVALID_STATUS(HttpStatus.BAD_REQUEST, "ANALYSIS_CALLBACK4001", "콜백 분석 상태가 올바르지 않습니다."),
+    ANALYSIS_CALLBACK_INVALID_PAYLOAD(HttpStatus.BAD_REQUEST, "ANALYSIS_CALLBACK4002", "콜백 요청 데이터가 올바르지 않습니다."),
     ;
 
     private final HttpStatus status;
