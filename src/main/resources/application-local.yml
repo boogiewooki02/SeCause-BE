@@ -38,3 +38,7 @@ jwt:
 
 fast-api:
   analysis-request-url: ${FASTAPI_ANALYSIS_REQUEST_LOCAL:http://localhost:8001/api/internal/analyze}
+
+analysis:
+  callback:
+    internal-token: ${ANALYSIS_CALLBACK_INTERNAL_TOKEN:}
