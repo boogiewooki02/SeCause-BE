@@ -5,6 +5,8 @@ import SeCause.SeCause_be.domain.analysis.dto.AnalysisCallbackFixExample;
 import SeCause.SeCause_be.domain.analysis.dto.AnalysisCallbackReferenceDocument;
 import SeCause.SeCause_be.domain.analysis.entity.Analysis;
 import SeCause.SeCause_be.domain.analysis.entity.AnalysisResult;
+import SeCause.SeCause_be.domain.analysis.exception.AnalysisException;
+import SeCause.SeCause_be.domain.analysis.exception.code.AnalysisErrorCode;
 import SeCause.SeCause_be.domain.analysis.repository.AnalysisResultRepository;
 import SeCause.SeCause_be.domain.projectRepository.entity.FileType;
 import SeCause.SeCause_be.domain.projectRepository.entity.RepositoryFile;
@@ -164,16 +166,20 @@ public class AnalysisFindingPersistenceService {
         return "INFRA".equalsIgnoreCase(tool);
     }
 
-    // FastAPI severity 문자열 변환, INFO/알 수 없는 값은 LOW 처리
+    // FastAPI severity 문자열 변환, INFO만 LOW로 허용
     private Severity resolveSeverity(String severity) {
+        if (!StringUtils.hasText(severity)) {
+            throw new AnalysisException(AnalysisErrorCode.ANALYSIS_CALLBACK_INVALID_PAYLOAD);
+        }
+
         if ("INFO".equalsIgnoreCase(severity)) {
             return Severity.LOW;
         }
 
         try {
             return Severity.valueOf(severity.toUpperCase(Locale.ROOT));
-        } catch (IllegalArgumentException | NullPointerException exception) {
-            return Severity.LOW;
+        } catch (IllegalArgumentException exception) {
+            throw new AnalysisException(AnalysisErrorCode.ANALYSIS_CALLBACK_INVALID_PAYLOAD);
         }
     }
 

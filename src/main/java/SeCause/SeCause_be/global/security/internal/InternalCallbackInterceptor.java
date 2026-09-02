@@ -19,7 +19,7 @@ public class InternalCallbackInterceptor implements HandlerInterceptor {
     public static final String INTERNAL_TOKEN_HEADER = "X-Internal-Token";
 
     private final AnalysisCallbackProperties analysisCallbackProperties;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public boolean preHandle(
