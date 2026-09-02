@@ -37,3 +37,7 @@ jwt:
 
 fast-api:
   analysis-request-url: ${FASTAPI_ANALYSIS_REQUEST_URL}
+
+analysis:
+  callback:
+    internal-token: ${ANALYSIS_CALLBACK_INTERNAL_TOKEN}
