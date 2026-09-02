@@ -1,6 +1,8 @@
 package SeCause.SeCause_be.domain.analysis.service;
 
-import SeCause.SeCause_be.domain.analysis.dto.AnalysisCallbackSuccessRequest;
+import SeCause.SeCause_be.domain.analysis.dto.AnalysisCallbackFinding;
+import SeCause.SeCause_be.domain.analysis.dto.AnalysisCallbackFixExample;
+import SeCause.SeCause_be.domain.analysis.dto.AnalysisCallbackReferenceDocument;
 import SeCause.SeCause_be.domain.analysis.entity.Analysis;
 import SeCause.SeCause_be.domain.analysis.entity.AnalysisResult;
 import SeCause.SeCause_be.domain.analysis.repository.AnalysisResultRepository;
@@ -33,14 +35,14 @@ public class AnalysisFindingPersistenceService {
     private final AnalysisResultRepository analysisResultRepository;
     private final SecurityReferenceRepository securityReferenceRepository;
 
-    public void saveAll(Analysis analysis, List<AnalysisCallbackSuccessRequest.Finding> findings) {
+    public void saveAll(Analysis analysis, List<AnalysisCallbackFinding> findings) {
         safeList(findings).stream()
                 .filter(Objects::nonNull)
                 .forEach(finding -> saveFinding(analysis, finding));
     }
 
     // FastAPI finding을 파일, 취약점, 상세 결과, 참고 문서로 저장
-    private void saveFinding(Analysis analysis, AnalysisCallbackSuccessRequest.Finding finding) {
+    private void saveFinding(Analysis analysis, AnalysisCallbackFinding finding) {
         RepositoryFile repositoryFile = getOrCreateRepositoryFile(analysis, finding);
 
         if (isInfraTool(finding.tool())) {
@@ -70,7 +72,7 @@ public class AnalysisFindingPersistenceService {
     }
 
     // repositoryId와 filePath 기준으로 파일 row 조회 또는 생성
-    private RepositoryFile getOrCreateRepositoryFile(Analysis analysis, AnalysisCallbackSuccessRequest.Finding finding) {
+    private RepositoryFile getOrCreateRepositoryFile(Analysis analysis, AnalysisCallbackFinding finding) {
         String filePath = limit(finding.filePath(), 1000);
 
         return repositoryFileRepository.findByRepositoryRepositoryIdAndFilePath(
@@ -89,7 +91,7 @@ public class AnalysisFindingPersistenceService {
     // 코드 취약점 상세 결과 저장
     private void saveAnalysisResult(
             CodeVulnerability vulnerability,
-            AnalysisCallbackSuccessRequest.Finding finding
+            AnalysisCallbackFinding finding
     ) {
         analysisResultRepository.save(AnalysisResult.createForCodeVulnerability(
                 vulnerability,
@@ -104,7 +106,7 @@ public class AnalysisFindingPersistenceService {
     // 인프라 취약점 상세 결과 저장
     private void saveAnalysisResult(
             InfraVulnerability vulnerability,
-            AnalysisCallbackSuccessRequest.Finding finding
+            AnalysisCallbackFinding finding
     ) {
         analysisResultRepository.save(AnalysisResult.createForInfraVulnerability(
                 vulnerability,
@@ -119,7 +121,7 @@ public class AnalysisFindingPersistenceService {
     // 코드 취약점 참고 문서 저장
     private void saveSecurityReferences(
             CodeVulnerability vulnerability,
-            List<AnalysisCallbackSuccessRequest.ReferenceDocument> referenceDocuments
+            List<AnalysisCallbackReferenceDocument> referenceDocuments
     ) {
         safeList(referenceDocuments).stream()
                 .filter(Objects::nonNull)
@@ -136,7 +138,7 @@ public class AnalysisFindingPersistenceService {
     // 인프라 취약점 참고 문서 저장
     private void saveSecurityReferences(
             InfraVulnerability vulnerability,
-            List<AnalysisCallbackSuccessRequest.ReferenceDocument> referenceDocuments
+            List<AnalysisCallbackReferenceDocument> referenceDocuments
     ) {
         safeList(referenceDocuments).stream()
                 .filter(Objects::nonNull)
@@ -176,7 +178,7 @@ public class AnalysisFindingPersistenceService {
     }
 
     // 참고 문서 title/url 기반 ReferenceType 추론
-    private ReferenceType resolveReferenceType(AnalysisCallbackSuccessRequest.ReferenceDocument reference) {
+    private ReferenceType resolveReferenceType(AnalysisCallbackReferenceDocument reference) {
         String value = ((reference.title() == null ? "" : reference.title()) + " "
                 + (reference.url() == null ? "" : reference.url())).toLowerCase(Locale.ROOT);
 
@@ -190,19 +192,19 @@ public class AnalysisFindingPersistenceService {
     }
 
     // 첫 번째 fixedCode를 저장용 수정 코드로 선택
-    private String resolveFixCode(List<AnalysisCallbackSuccessRequest.FixExample> fixExamples) {
+    private String resolveFixCode(List<AnalysisCallbackFixExample> fixExamples) {
         return safeList(fixExamples).stream()
                 .filter(Objects::nonNull)
-                .map(AnalysisCallbackSuccessRequest.FixExample::fixedCode)
+                .map(AnalysisCallbackFixExample::fixedCode)
                 .filter(StringUtils::hasText)
                 .findFirst()
                 .orElse(null);
     }
 
-    private String resolveLanguage(List<AnalysisCallbackSuccessRequest.FixExample> fixExamples) {
+    private String resolveLanguage(List<AnalysisCallbackFixExample> fixExamples) {
         return safeList(fixExamples).stream()
                 .filter(Objects::nonNull)
-                .map(AnalysisCallbackSuccessRequest.FixExample::language)
+                .map(AnalysisCallbackFixExample::language)
                 .filter(StringUtils::hasText)
                 .findFirst()
                 .map(language -> limit(language, 50))
